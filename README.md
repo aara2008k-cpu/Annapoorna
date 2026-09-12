@@ -1,4 +1,4 @@
-# ReFeed — Food Waste Redistribution Platform
+# Annapoorna — Food Waste Redistribution Platform
 
 A web platform connecting food donors (hotels, restaurants, banquet halls, mess halls) with NGOs for surplus food redistribution, with an automatic fallback to industrial recycling (biogas/composting) for food that goes unclaimed past its safe window.
 
@@ -17,8 +17,3 @@ This repo contains the full spec package for this project. **Read these files in
 - **Core mechanic:** every food listing moves through a state machine (`AVAILABLE → RESERVED → IN_TRANSIT → COMPLETED`, or `AVAILABLE → EXPIRED_SPOILED → RECYCLE_CLAIMED → RECYCLED`). This state machine is the spine of the whole app — see PRD.md §4.
 - **This is a hackathon build.** Favor working end-to-end over polished edge cases. `phases.md` is ordered so that a judge can see a live demo after every phase, not just the last one.
 
-## Non-goals for this build
-- No payment processing
-- No native mobile app (responsive web only)
-- No real-time websockets — polling is an accepted tradeoff (see `techstack.md`)
-- No production-grade auth (email verification, password reset flows) unless time allows — see `phases.md` Phase 6

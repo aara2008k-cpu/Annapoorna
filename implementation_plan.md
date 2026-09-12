@@ -1,13 +1,13 @@
 # Implementation Plan — Phase 0: Foundation
 
-Phase 0 establishes the bedrock of ReFeed in accordance with the canonical specs: directory layout, database schema migration, PDO database connection layer, session authentication endpoints, role-based access guard, and the unified authentication UI.
+Phase 0 establishes the bedrock of Annapoorna in accordance with the canonical specs: directory layout, database schema migration, PDO database connection layer, session authentication endpoints, role-based access guard, and the unified authentication UI.
 
 ## Spec Adherence Summary
 
 - **Stack**: Vanilla HTML5/CSS3/JavaScript + PHP 8+ / MySQL. No frameworks, bundlers, npm, or composer packages.
 - **Database Access**: 100% PDO with prepared statements and typed parameter bindings. Zero string-interpolated SQL.
 - **Conventions**: JSON API protocol `{ "success": bool, "data": ..., "error": string|null }` with standard HTTP status codes.
-- **Folder Layout**: Exact match to [file-structure.md](file:///c:/Users/Harshil/Downloads/refeed/file-structure.md).
+- **Folder Layout**: Exact match to [file-structure.md](file:///c:/Users/Harshil/Downloads/Annapoorna/file-structure.md).
 
 ---
 
@@ -16,12 +16,12 @@ Phase 0 establishes the bedrock of ReFeed in accordance with the canonical specs
 > [!IMPORTANT]
 > **PHP & MySQL Environment Setup**
 > Preliminary system inspection shows that neither `php` nor `mysql` / `mysqld` is currently available in the system `PATH`.
-> To run the local dev server (`php -S localhost:8000 -t public`) and host the MySQL database (`refeed`), we need a working PHP and MySQL environment.
+> To run the local dev server (`php -S localhost:8000 -t public`) and host the MySQL database (`Annapoorna`), we need a working PHP and MySQL environment.
 >
 > Please confirm your preferred setup:
 > 1. Do you already have XAMPP, Laragon, WampServer, or Docker installed at a specific directory (e.g. `D:\xampp`, custom path)?
 > 2. Or would you like automated assistance downloading and configuring a lightweight portable PHP 8.x zip and MariaDB/MySQL for Windows into a local dev tools directory?
-> 3. What are your local MySQL connection credentials (default assumed: `host=127.0.0.1`, `port=3306`, `user=root`, `password=""`, `dbname=refeed`)?
+> 3. What are your local MySQL connection credentials (default assumed: `host=127.0.0.1`, `port=3306`, `user=root`, `password=""`, `dbname=Annapoorna`)?
 
 ---
 
@@ -29,7 +29,7 @@ Phase 0 establishes the bedrock of ReFeed in accordance with the canonical specs
 
 ### 1. Directory Structure
 
-Establish the directory tree defined in [file-structure.md](file:///c:/Users/Harshil/Downloads/refeed/file-structure.md):
+Establish the directory tree defined in [file-structure.md](file:///c:/Users/Harshil/Downloads/Annapoorna/file-structure.md):
 
 - `database/`
 - `config/`
@@ -56,8 +56,8 @@ Establish the directory tree defined in [file-structure.md](file:///c:/Users/Har
 
 ### 2. Database Schema & Migration
 
-#### [NEW] [schema.sql](file:///c:/Users/Harshil/Downloads/refeed/database/schema.sql)
-Implement canonical DDL script strictly following [database-schema.md](file:///c:/Users/Harshil/Downloads/refeed/database-schema.md):
+#### [NEW] [schema.sql](file:///c:/Users/Harshil/Downloads/Annapoorna/database/schema.sql)
+Implement canonical DDL script strictly following [database-schema.md](file:///c:/Users/Harshil/Downloads/Annapoorna/database-schema.md):
 - `users` table:
   - `id INT AUTO_INCREMENT PRIMARY KEY`
   - `role ENUM('donor','ngo','recycler','admin') NOT NULL`
@@ -114,17 +114,17 @@ Implement canonical DDL script strictly following [database-schema.md](file:///c
 
 ### 3. Backend Core & Configuration
 
-#### [NEW] [db.php](file:///c:/Users/Harshil/Downloads/refeed/config/db.php)
+#### [NEW] [db.php](file:///c:/Users/Harshil/Downloads/Annapoorna/config/db.php)
 - Returns a singleton or memoized `PDO` instance.
 - Reads DB parameters from `$_ENV` or defaults:
-  `DB_HOST=127.0.0.1`, `DB_PORT=3306`, `DB_NAME=refeed`, `DB_USER=root`, `DB_PASS=""`.
+  `DB_HOST=127.0.0.1`, `DB_PORT=3306`, `DB_NAME=Annapoorna`, `DB_USER=root`, `DB_PASS=""`.
 - Configures options:
   - `PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION`
   - `PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC`
   - `PDO::ATTR_EMULATE_PREPARES => false`
 - Includes a connection check helper function and JSON error reporting helper `sendJsonResponse($success, $data, $error, $statusCode)`.
 
-#### [NEW] [auth-guard.php](file:///c:/Users/Harshil/Downloads/refeed/public/includes/auth-guard.php)
+#### [NEW] [auth-guard.php](file:///c:/Users/Harshil/Downloads/Annapoorna/public/includes/auth-guard.php)
 - Starts session safely (`session_status() === PHP_SESSION_NONE`).
 - Provides `requireAuth($allowedRoles = [])`:
   - If unauthenticated: redirects to `/auth.php` for browser requests, or emits HTTP 401 `{ "success": false, "error": "unauthorized" }` for API requests.
@@ -135,7 +135,7 @@ Implement canonical DDL script strictly following [database-schema.md](file:///c
 
 ### 4. Authentication Endpoints
 
-#### [NEW] [register.php](file:///c:/Users/Harshil/Downloads/refeed/public/api/register.php)
+#### [NEW] [register.php](file:///c:/Users/Harshil/Downloads/Annapoorna/public/api/register.php)
 - Validates inputs: `role` in `('donor','ngo','recycler')`, `org_name`, `email`, `password` (min length 8), `phone`, optional `lat`, `lng`.
 - Handles optional verification document file upload (`$_FILES['verification_doc']` or multipart): verifies file extension/MIME (pdf, png, jpg), generates random file name, moves to `public/uploads/docs/`.
 - Computes `password_hash($password, PASSWORD_DEFAULT)`.
@@ -143,7 +143,7 @@ Implement canonical DDL script strictly following [database-schema.md](file:///c
 - Inserts via prepared statement. Handles unique constraint violations (`email_already_exists`).
 - Returns HTTP 201 `{ "success": true, "data": { "user_id": ..., "role": ..., "verified": ... }, "error": null }`.
 
-#### [NEW] [login.php](file:///c:/Users/Harshil/Downloads/refeed/public/api/login.php)
+#### [NEW] [login.php](file:///c:/Users/Harshil/Downloads/Annapoorna/public/api/login.php)
 - Body: `{ email, password }` parsed from `php://input`.
 - Prepared statement selects user by email.
 - Uses `password_verify($password, $user['password_hash'])`.
@@ -151,7 +151,7 @@ Implement canonical DDL script strictly following [database-schema.md](file:///c
 - Removes `password_hash` from user array and returns HTTP 200 `{ "success": true, "data": { "user": ... }, "error": null }`.
 - If invalid, returns HTTP 401 `{ "success": false, "data": null, "error": "invalid_credentials" }`.
 
-#### [NEW] [logout.php](file:///c:/Users/Harshil/Downloads/refeed/public/api/logout.php)
+#### [NEW] [logout.php](file:///c:/Users/Harshil/Downloads/Annapoorna/public/api/logout.php)
 - Unsets `$_SESSION`, destroys session, and removes session cookie.
 - Returns HTTP 200 `{ "success": true, "data": null, "error": null }`.
 
@@ -159,20 +159,20 @@ Implement canonical DDL script strictly following [database-schema.md](file:///c
 
 ### 5. UI & Styling Foundation
 
-#### [NEW] [style.css](file:///c:/Users/Harshil/Downloads/refeed/public/assets/css/style.css)
+#### [NEW] [style.css](file:///c:/Users/Harshil/Downloads/Annapoorna/public/assets/css/style.css)
 - Mobile-first CSS architecture with CSS custom properties:
   - Theme colors: Emerald/Sage greens (food rescue, fresh), warm Amber (urgency/warnings), deep slate charcoal text, clean card backgrounds.
   - Elevation shadows, responsive container widths, modern typography, glassmorphic accents.
   - Reusable components: forms, buttons, alert banners, role badges, tabs.
 
-#### [NEW] [header.php](file:///c:/Users/Harshil/Downloads/refeed/public/includes/header.php)
+#### [NEW] [header.php](file:///c:/Users/Harshil/Downloads/Annapoorna/public/includes/header.php)
 - Shared HTML header, meta viewport, navigation bar.
-- Shows brand logo "ReFeed", links to public dashboard, and context-sensitive user status (Role badge, Org name, Logout button when logged in; Login/Register links when guest).
+- Shows brand logo "Annapoorna", links to public dashboard, and context-sensitive user status (Role badge, Org name, Logout button when logged in; Login/Register links when guest).
 
-#### [NEW] [footer.php](file:///c:/Users/Harshil/Downloads/refeed/public/includes/footer.php)
+#### [NEW] [footer.php](file:///c:/Users/Harshil/Downloads/Annapoorna/public/includes/footer.php)
 - Shared footer citing EPA WARM model metrics formula (PRD §9) and role links.
 
-#### [NEW] [auth.php](file:///c:/Users/Harshil/Downloads/refeed/public/auth.php)
+#### [NEW] [auth.php](file:///c:/Users/Harshil/Downloads/Annapoorna/public/auth.php)
 - Dual-mode card UI: Toggle between **Login** and **Register**.
 - Dynamic registration form adjusting fields based on selected role:
   - Donor: Org name, email, password, phone, location (with "Use current location" button via `navigator.geolocation` or lat/lng fields).

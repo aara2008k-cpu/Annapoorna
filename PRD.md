@@ -1,4 +1,4 @@
-# Product Requirements Document — ReFeed
+# Product Requirements Document — Annapoorna
 
 ## 1. Problem Statement
 Surplus edible food from hotels, restaurants, and mess halls is routinely discarded instead of reaching people who need it, because there's no fast, trusted, hyperlocal way to connect a donor with a nearby NGO inside the narrow window before food is no longer safe to eat. Separately, food that genuinely can't be donated (spoiled, past its window) still goes to landfill instead of composting/biogas, because there's no coordination layer for that either.
